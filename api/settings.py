@@ -56,6 +56,7 @@ ROOT_URLCONF = 'api.urls'
 
 WSGI_APPLICATION = 'api.wsgi.application'
 
+FIXTURE_DIRS = ['fixtures']
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
