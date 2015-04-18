@@ -17,11 +17,30 @@ To publish changes: `git push heroku`
 
 To run migrations on Heroku: `heroku run python manage.py migrate`
 
+## Postgres
+
+The 'citext' extension must be enabled.
+
+Locally:
+`\c database_name
+CREATE EXTENSION citext;
+\q`
+
+Heroku:
+`heroku pg:psql
+
+CREATE EXTENSION citext;
+\q`
+
 ## Local Debugging
 
 For local debugging, postgres must be running: `postgres -D /usr/local/var/postgres/`
 
-The webserver is Gunicorn, start with `foreman start`. Defaults to http://localhost:5000
+Start the server with `python manage.py runserver`. Defaults to http://localhost:8000
+
+## Testing
+
+This app uses behave and BDD style tests. Run with `behave` from the application root
 
 ## Uses the Heroku Django Starter Template (https://github.com/heroku/heroku-django-template), which includes:
 
