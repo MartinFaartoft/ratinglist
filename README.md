@@ -19,18 +19,21 @@ To run migrations on Heroku: `heroku run python manage.py migrate`
 
 ## Postgres
 
-The 'citext' extension must be enabled.
+The 'citext' extension must be enabled (case-insensitive text column type)
 
 Locally:
-`\c database_name
+```
+\c database_name
 CREATE EXTENSION citext;
-\q`
+\q
+```
 
 Heroku:
-`heroku pg:psql
-
+```
+heroku pg:psql
 CREATE EXTENSION citext;
-\q`
+\q
+```
 
 ## Local Debugging
 
@@ -42,7 +45,9 @@ Start the server with `python manage.py runserver`. Defaults to http://localhost
 
 This app uses behave and BDD style tests. Run with `behave` from the application root
 
-## Uses the Heroku Django Starter Template (https://github.com/heroku/heroku-django-template), which includes:
+## Template
+
+Uses the Heroku Django Starter Template (https://github.com/heroku/heroku-django-template), which includes:
 
 - [Gunicorn](https://warehouse.python.org/project/gunicorn/)
 - [WhiteNoise](https://warehouse.python.org/project/whitenoise/)
