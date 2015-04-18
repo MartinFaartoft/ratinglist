@@ -3,16 +3,16 @@ Feature: Player Maintenance
 
 Scenario: Creating a player
 	Given I am logged in as an admin
-	  And no players exist
-	 When I create a new player
-	 Then The number of players should be 1
+	  And I count the number of players
+	 When I create a new player with the name "Test"
+	 Then The number of players should increase by one
 
 Scenario: Duplicate player names
     Given I am logged in as an admin
-      And no players exist
+      And I count the number of players
      When I create a new player with the name "Test"
       And I create a new player with the name "Test"
-     Then The number of players should be 1
+     Then The number of players should increase by one
 
 Scenario: Deleting a player with no games played
 
