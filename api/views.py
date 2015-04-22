@@ -1,5 +1,5 @@
-from api.models import Player
-from api.serializers import PlayerSerializer
+from api.models import Player, Game
+from api.serializers import PlayerSerializer, GameSerializer
 from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
@@ -66,3 +66,18 @@ class LogoutView(APIView):
         logout(request)
         response = Response(status=status.HTTP_200_OK)
         return response
+
+class GamesList(APIView):
+    def get(self, request):        
+        games = Game.objects.all()
+        serializer = GameSerializer(games, many=True)
+        return Response(serializer.data)
+
+
+    def post(self, request):
+        serializer = GameSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

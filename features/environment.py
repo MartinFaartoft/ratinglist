@@ -9,7 +9,7 @@ django.setup()
     
 def before_scenario(context, scenario):
     management.call_command('flush', verbosity=0, interactive=False)
-    management.call_command('loaddata', 'fixtures/empty.json', verbosity=0)
+    management.call_command('loaddata', 'fixtures/four_players.json', verbosity=0)
 
     if not hasattr(context, 'client') or context.client is None:
         context.client = requests.session()
