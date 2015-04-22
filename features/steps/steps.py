@@ -73,7 +73,7 @@ def step_impl(context):
     game_players.append(dict(player_id = 3, score = 0, order = 2))
     game_players.append(dict(player_id = 4, score = 0, order = 3))
     game['game_players'] = game_players
-    
+    print(game)
     context.created_game = create_game(context, game)
 
 

@@ -21,7 +21,7 @@ class Game(models.Model):
         db_table = 'games'
 
 class GamePlayer(models.Model):
-    game = models.ForeignKey(Game)
+    game = models.ForeignKey(Game, related_name='game_players')
     player = models.ForeignKey(Player)
     score = models.IntegerField()
     order = models.IntegerField()
