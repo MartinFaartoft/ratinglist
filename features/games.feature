@@ -20,3 +20,21 @@ Scenario: Creating a game with 8 players
       And at least 8 players exist
      When I create a new game with 8 players
      Then the game should not be created
+
+Scenario: Creating a game where the scores do not sum to zero
+    Given I am logged in as an admin
+      And at least 4 players exist
+     When I create a new game with 4 players with scores that do not sum to zero
+     Then the game should not be created
+
+Scenario: A player is in the game more than once
+
+Scenario: An unknown player is in the game
+
+Scenario: A riichi game has a score that is not evenly divisible by 100
+
+Scenario: The order of the players in a game is wrong
+
+Scenario: The gametype is invalid
+
+Scenario: The number of winds is invalid

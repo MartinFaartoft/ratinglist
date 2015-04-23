@@ -31,11 +31,26 @@ def get_games(context):
 def create_game(context, game):
     headers = {'Content-type': 'application/json'}
     context.response = context.client.post(base_url + '/games/', data = json.dumps(game), headers=headers)
-    
+
     try:
         return context.response.json()
     except:
         return
+
+def create_valid_game_dict(number_of_players):
+    n = number_of_players
+
+    game = dict()
+    game['game_type'] = 'mcr'
+    game['number_of_winds'] = 4
+    game['date'] = '2015-04-22T00:00'
+
+    game_players = []
+    for i in range(n):
+        game_players.append(dict(player = n, score = 0, order = n-1))
+    game['game_players'] = game_players
+
+    return game
 
 @given(u'I am logged in as an admin')
 def step_impl(context):
@@ -68,18 +83,14 @@ def step_impl(context):
 
 @when(u'I create a new game with {number} players')
 def step_impl(context, number):
-    n = int(number)
-
-    game = dict()
-    game['game_type'] = 'mcr'
-    game['number_of_winds'] = 4
-    game['date'] = '2015-04-22T00:00'
-
-    game_players = []
-    for i in range(n):
-        game_players.append(dict(player = n, score = 0, order = n-1))
-    game['game_players'] = game_players
+    game = create_valid_game_dict(int(number))
     context.created_game = create_game(context, game)
+
+@when(u'I create a new game with {number} players with scores that do not sum to zero')
+def step_impl(context, number):
+    game = create_valid_game_dict(int(number))
+    game['game_players'][0]['score'] = 10
+    create_game(context, game)    
 
 @then(u'the number of games should increase by 1')
 def step_impl(context):

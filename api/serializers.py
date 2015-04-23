@@ -31,6 +31,14 @@ class GameSerializer(serializers.ModelSerializer):
             raise ValidationError({
                 'game_players': 'No more than 7 players allowed'
                 })
+
+        score_sum = sum(map(lambda x: int(x['score']), game_players))
+
+        if score_sum != 0:
+            raise ValidationError({
+                'game_players.score': 'Score does not sum to zero'
+                })
+
         
         game = Game.objects.create(**validated_data)
         
