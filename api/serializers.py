@@ -7,34 +7,25 @@ class PlayerSerializer(serializers.ModelSerializer):
         model = Player
         fields = ('id', 'name')
 
-
 class GamePlayerSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = GamePlayer
-        player = serializers.PrimaryKeyRelatedField(queryset = Player.objects)
+        player = serializers.PrimaryKeyRelatedField(read_only = True)
         fields = ('score', 'order', 'player')
-
 
 class GameSerializer(serializers.ModelSerializer):
     game_players = GamePlayerSerializer(many = True, required = True)
 
     def create(self, validated_data):
-        game = Game()
-        game.number_of_winds = validated_data['number_of_winds']
-        game.date = validated_data['date']
-        game.game_type = validated_data['game_type']
-        game.save()
+        game_players = validated_data.pop('game_players')
         
-        for row in validated_data['game_players']:
-            gp = GamePlayer()
-            gp.score = row['score']
-            gp.order = row['order']
-            
-            gp.player = row['player']
-            game.game_players.add(gp)
+        game = Game.objects.create(**validated_data)
         
-        return Game.objects.get(pk=game.pk)
+        for row in game_players:
+            game.game_players.add(GamePlayer(**row))
+        
+        return game
 
     class Meta:
         
