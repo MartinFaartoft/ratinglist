@@ -1,5 +1,6 @@
 from behave import *
 import requests
+import json
 from rest_framework import status
 
 base_url = 'http://localhost:8000'
@@ -28,7 +29,8 @@ def get_games(context):
     return context.response.json()
 
 def create_game(context, game):
-    context.response = context.client.post(base_url + '/games/', data = game)
+    headers = {'Content-type': 'application/json'}
+    context.response = context.client.post(base_url + '/games/', data = json.dumps(game), headers=headers)
     return context.response.json()
 
 @given(u'I am logged in as an admin')
@@ -68,14 +70,12 @@ def step_impl(context):
     game['date'] = '2015-04-22T00:00'
 
     game_players = []
-    game_players.append(dict(player_id = 1, score = 0, order = 0))
-    game_players.append(dict(player_id = 2, score = 0, order = 1))
-    game_players.append(dict(player_id = 3, score = 0, order = 2))
-    game_players.append(dict(player_id = 4, score = 0, order = 3))
+    game_players.append(dict(player = 1, score = 0, order = 0))
+    game_players.append(dict(player = 2, score = 0, order = 1))
+    game_players.append(dict(player = 3, score = 0, order = 2))
+    game_players.append(dict(player = 4, score = 0, order = 3))
     game['game_players'] = game_players
-    print(game)
     context.created_game = create_game(context, game)
-
 
 @then(u'the number of games should increase by 1')
 def step_impl(context):
@@ -84,4 +84,4 @@ def step_impl(context):
 @then(u'the game should contain {number} players')
 def step_impl(context, number):
     n = int(number)
-    assert n == len(context.created_game.game_players)
+    assert n == len(context.created_game['game_players'])
