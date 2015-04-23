@@ -75,8 +75,6 @@ class GamesList(APIView):
 
 
     def post(self, request):
-        print("REQUEST:")
-        print(request.data)
         serializer = GameSerializer(data = request.data)
         if serializer.is_valid():
             serializer.save()

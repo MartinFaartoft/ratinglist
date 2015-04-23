@@ -27,4 +27,5 @@ class GamePlayer(models.Model):
     order = models.IntegerField()
 
     class Meta:
+        unique_together = ("game", "player")
         db_table = 'game_players'

@@ -28,6 +28,12 @@ Scenario: Creating a game where the scores do not sum to zero
      Then the game should not be created
 
 Scenario: A player is in the game more than once
+    Given I am logged in as an admin
+      And at least 4 players exist
+     When I create a new game with 4 players where one player is duplicated
+     Then the game should not be created
+
+
 
 Scenario: An unknown player is in the game
 

@@ -30,7 +30,9 @@ def get_games(context):
 
 def create_game(context, game):
     headers = {'Content-type': 'application/json'}
-    context.response = context.client.post(base_url + '/games/', data = json.dumps(game), headers=headers)
+    game_json = json.dumps(game)
+    #print(game_json)
+    context.response = context.client.post(base_url + '/games/', data = game_json, headers=headers)
 
     try:
         return context.response.json()
@@ -47,7 +49,7 @@ def create_valid_game_dict(number_of_players):
 
     game_players = []
     for i in range(n):
-        game_players.append(dict(player = n, score = 0, order = n-1))
+        game_players.append(dict(player = i+1, score = 0, order = i))
     game['game_players'] = game_players
 
     return game
@@ -91,6 +93,12 @@ def step_impl(context, number):
     game = create_valid_game_dict(int(number))
     game['game_players'][0]['score'] = 10
     create_game(context, game)    
+
+@when(u'I create a new game with {number} players where one player is duplicated')
+def step_impl(context, number):
+    game = create_valid_game_dict(int(number))
+    game['game_players'][1]['player'] = 1
+    create_game(context, game)
 
 @then(u'the number of games should increase by 1')
 def step_impl(context):
