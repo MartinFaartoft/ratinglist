@@ -8,6 +8,7 @@ class PlayerSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 class GamePlayerSerializer(serializers.ModelSerializer):
+    #player = PlayerSerializer(read_only = True) #When this is uncommented, the serialization is nice, but deser doesn't work :(
         
     class Meta:
         model = GamePlayer
