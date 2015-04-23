@@ -31,7 +31,11 @@ def get_games(context):
 def create_game(context, game):
     headers = {'Content-type': 'application/json'}
     context.response = context.client.post(base_url + '/games/', data = json.dumps(game), headers=headers)
-    return context.response.json()
+    
+    try:
+        return context.response.json()
+    except:
+        return
 
 @given(u'I am logged in as an admin')
 def step_impl(context):
@@ -62,18 +66,18 @@ def step_impl(context):
     games = get_games(context)
     context.game_count = len(games)
 
-@when(u'I create a new game with 4 players')
-def step_impl(context):
+@when(u'I create a new game with {number} players')
+def step_impl(context, number):
+    n = int(number)
+
     game = dict()
     game['game_type'] = 'mcr'
     game['number_of_winds'] = 4
     game['date'] = '2015-04-22T00:00'
 
     game_players = []
-    game_players.append(dict(player = 1, score = 0, order = 0))
-    game_players.append(dict(player = 2, score = 0, order = 1))
-    game_players.append(dict(player = 3, score = 0, order = 2))
-    game_players.append(dict(player = 4, score = 0, order = 3))
+    for i in range(n):
+        game_players.append(dict(player = n, score = 0, order = n-1))
     game['game_players'] = game_players
     context.created_game = create_game(context, game)
 
@@ -85,3 +89,7 @@ def step_impl(context):
 def step_impl(context, number):
     n = int(number)
     assert n == len(context.created_game['game_players'])
+
+@then(u'the game should not be created')
+def step_impl(context):
+    assert context.response.status_code != status.HTTP_201_CREATED

@@ -1,5 +1,6 @@
 from django.forms import widgets
 from rest_framework import serializers
+from django.core.exceptions import ValidationError
 from api.models import *
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -20,6 +21,11 @@ class GameSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         game_players = validated_data.pop('game_players')
+
+        if len(game_players) < 4:
+            raise ValidationError({
+                'game_players': 'At least 4 players are required'
+                })
         
         game = Game.objects.create(**validated_data)
         
