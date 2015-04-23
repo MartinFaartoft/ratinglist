@@ -14,3 +14,9 @@ Scenario: Creating a game with 3 players
       And at least 3 players exist
      When I create a new game with 3 players
      Then the game should not be created
+
+Scenario: Creating a game with 8 players
+    Given I am logged in as an admin
+      And at least 8 players exist
+     When I create a new game with 8 players
+     Then the game should not be created

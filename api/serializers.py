@@ -26,6 +26,11 @@ class GameSerializer(serializers.ModelSerializer):
             raise ValidationError({
                 'game_players': 'At least 4 players are required'
                 })
+
+        if len(game_players) > 7:
+            raise ValidationError({
+                'game_players': 'No more than 7 players allowed'
+                })
         
         game = Game.objects.create(**validated_data)
         
