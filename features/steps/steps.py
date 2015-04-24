@@ -6,9 +6,11 @@ from rest_framework import status
 base_url = 'http://localhost:8000'
 
 def login(context, username, password):
-    url = base_url + '/auth/login'
-    login_data = dict(username=username, password=password)
-    context.response = context.client.post(url, data=login_data)
+    context.client.auth = (username, password)
+    #url = base_url + '/auth/login'
+    #login_data = dict(username=username, password=password)
+    #context.response = context.client.post(url, data=login_data)
+    #assert context.response.status_code == status.HTTP_302_FOUND
     #if context.response.status_code == 200:
         #context.client.headers['X-CSRFToken'] = context.client.cookies['csrftoken']
 
@@ -57,7 +59,7 @@ def create_valid_game_dict(number_of_players):
 @given(u'I am logged in as an admin')
 def step_impl(context):
     login(context, 'admin', 'admin')
-    assert context.response.status_code == status.HTTP_302_FOUND
+    #assert context.response.status_code == status.HTTP_302_FOUND
 
 @given(u'I count the number of players')
 def step_impl(context):
@@ -118,4 +120,14 @@ def step_impl(context, number):
 
 @then(u'the game should not be created')
 def step_impl(context):
+    print(context.response.status_code)
     assert context.response.status_code == status.HTTP_400_BAD_REQUEST #!= status.HTTP_201_CREATED
+
+@given(u'I am not logged in')
+def step_impl(context):
+    logout(context)
+
+@then(u'I should be told that I am forbidden from doing that')
+def step_impl(context):
+    print(context.response.status_code)
+    assert context.response.status_code == status.HTTP_403_FORBIDDEN

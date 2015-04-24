@@ -4,10 +4,11 @@ from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import permissions
 from rest_framework import status
 
 class PlayerList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request):
         players = Player.objects.all()
         serializer = PlayerSerializer(players, many=True)
@@ -22,6 +23,7 @@ class PlayerList(APIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class PlayerDetail(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, pk):
         try:
             return Player.objects.get(pk=pk)
@@ -48,7 +50,7 @@ class PlayerDetail(APIView):
         return Response(status = status.HTTP_204_NO_CONTENT)
 
 class LoginView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request):
         username = request.DATA['username']
@@ -60,7 +62,7 @@ class LoginView(APIView):
             return Response("Invalid login", status = 401)
 
 class LogoutView(APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
         logout(request)
@@ -68,6 +70,7 @@ class LogoutView(APIView):
         return response
 
 class GamesList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request):        
         games = Game.objects.all()
         serializer = GameSerializer(games, many=True)
