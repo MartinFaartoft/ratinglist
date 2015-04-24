@@ -1,6 +1,6 @@
 from django.forms import widgets
 from rest_framework import serializers
-from django.core.exceptions import ValidationError
+ValidationError = serializers.ValidationError
 from api.models import *
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -33,13 +33,17 @@ class GameSerializer(serializers.ModelSerializer):
                 })
 
         score_sum = sum(map(lambda x: int(x['score']), game_players))
-
         if score_sum != 0:
             raise ValidationError({
                 'game_players.score': 'Score does not sum to zero'
                 })
 
-        
+        unique_player_ids = set(map(lambda x: x['player'], game_players))
+        if len(unique_player_ids) < len(game_players):
+            raise ValidationError({
+                'game_players.player': 'Duplicate players are not allowed'
+                })
+
         game = Game.objects.create(**validated_data)
         
         for row in game_players:
@@ -47,8 +51,7 @@ class GameSerializer(serializers.ModelSerializer):
         
         return game
 
-    class Meta:
-        
+    class Meta:        
         model = Game
         fields = ('id', 'game_type', 'date', 'number_of_winds', 'game_players')
 

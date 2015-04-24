@@ -111,4 +111,4 @@ def step_impl(context, number):
 
 @then(u'the game should not be created')
 def step_impl(context):
-    assert context.response.status_code != status.HTTP_201_CREATED
+    assert context.response.status_code == status.HTTP_400_BAD_REQUEST #!= status.HTTP_201_CREATED
