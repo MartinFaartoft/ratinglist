@@ -1,5 +1,5 @@
-from api.models import Player, Game
-from api.serializers import PlayerSerializer, GameSerializer
+from api.models import *
+from api.serializers import *
 from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
@@ -45,6 +45,10 @@ class PlayerDetail(APIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
+        game_players = GamePlayer.objects.filter(player_id=pk)
+        if len(game_players) > 0:
+            return Response(status = status.HTTP_409_CONFLICT)
+
         player = self.get_object(pk)
         player.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)

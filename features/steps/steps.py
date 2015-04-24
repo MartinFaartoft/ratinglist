@@ -22,9 +22,19 @@ def get_players(context):
     context.response = context.client.get(base_url + '/players/')
     return context.response.json()
 
+def get_player(context, player_id):
+    context.response = context.client.get(base_url + '/players/' + player_id)
+    if context.response.status_code == status.HTTP_200_OK:
+        return context.response.json()
+    return
+
 def create_player(context, name):
     url = base_url + '/players/'
     context.response = context.client.post(url, data = dict(name = name))
+
+def update_player(context, player_id, name):
+    url = base_url + '/players/' + player_id
+    context.response = context.client.put(url, data = dict(name = name))
 
 def get_games(context):
     context.response = context.client.get(base_url + '/games/')
@@ -55,6 +65,9 @@ def create_valid_game_dict(number_of_players):
     game['game_players'] = game_players
 
     return game
+
+def delete_player(context, id):
+    context.response = context.client.delete(base_url + '/players/' + id)
 
 @given(u'I am logged in as an admin')
 def step_impl(context):
@@ -131,3 +144,40 @@ def step_impl(context):
 def step_impl(context):
     print(context.response.status_code)
     assert context.response.status_code == status.HTTP_403_FORBIDDEN
+
+@given(u'a player with id {player_id} exists')
+@then(u'a player with id {player_id} should exist')
+def step_impl(context, player_id):
+    assert get_player(context, player_id) is not None
+
+@given(u'the player with id {player_id} has not played any games')
+def step_impl(context, player_id):
+    assert len(get_games(context)) == 0
+
+@when(u'I delete the player with id {player_id}')
+def step_impl(context, player_id):
+    delete_player(context, player_id)
+
+@then(u'a player with id {player_id} should not exist')
+def step_impl(context, player_id):
+    assert get_player(context, player_id) is None
+
+@then(u'I should not be allowed to delete')
+def step_impl(context):
+    assert context.response.status_code == status.HTTP_409_CONFLICT
+
+@when(u'I update the player with id {player_id} to have the name {name}')
+def step_impl(context, player_id, name):
+    update_player(context, player_id, name)
+
+@when(u'I retrieve the player with id {player_id}')
+def step_impl(context, player_id):
+    context.player = get_player(context, player_id)
+
+@then(u'the player should have the name {name}')
+def step_impl(context, name):
+    assert context.player['name'] == name
+
+@then(u'the player should have a name that is not empty')
+def step_impl(context):
+    assert len(context.player['name']) > 0
