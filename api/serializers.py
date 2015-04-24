@@ -19,8 +19,9 @@ class GamePlayerSerializer(serializers.ModelSerializer):
 class GameSerializer(serializers.ModelSerializer):
     game_players = GamePlayerSerializer(many = True, required = True)
 
-    def create(self, validated_data):
-        game_players = validated_data.pop('game_players')
+    def validate(self, data):
+        """Single field validation is done on Django model instances, this method takes care of multi-field validation"""
+        game_players = data['game_players']
 
         if len(game_players) < 4:
             raise ValidationError({
@@ -43,6 +44,11 @@ class GameSerializer(serializers.ModelSerializer):
             raise ValidationError({
                 'game_players.player': 'Duplicate players are not allowed'
                 })
+
+        return data
+
+    def create(self, validated_data):
+        game_players = validated_data.pop('game_players')
 
         game = Game.objects.create(**validated_data)
         
