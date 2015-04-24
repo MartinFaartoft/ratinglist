@@ -13,7 +13,6 @@ class GamePlayerSerializer(serializers.ModelSerializer):
         
     class Meta:
         model = GamePlayer
-        player = serializers.PrimaryKeyRelatedField(read_only = True)
         fields = ('score', 'order', 'player')
 
 class GameSerializer(serializers.ModelSerializer):

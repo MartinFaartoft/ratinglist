@@ -35,7 +35,12 @@ Scenario: A player is in the game more than once
 
 
 
-Scenario: An unknown player is in the game
+Scenario: A player that does not exist is in the game
+    Given I am logged in as an admin
+      And at least 4 players exist
+     When I create a new game with 4 players where one player does not exist
+     Then the game should not be created
+
 
 Scenario: A riichi game has a score that is not evenly divisible by 100
 

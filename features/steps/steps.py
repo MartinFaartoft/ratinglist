@@ -100,6 +100,13 @@ def step_impl(context, number):
     game['game_players'][1]['player'] = 1
     create_game(context, game)
 
+@when(u'I create a new game with {number} players where one player does not exist')
+def step_impl(context, number):
+    game = create_valid_game_dict(int(number))
+    game['game_players'][1]['player'] = 1337
+    create_game(context, game)
+
+
 @then(u'the number of games should increase by 1')
 def step_impl(context):
     assert context.game_count + 1 == len(get_games(context))
