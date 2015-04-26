@@ -45,3 +45,19 @@ def step_impl(context, number):
 def step_impl(context):
     print(context.response.status_code)
     assert context.response.status_code == status.HTTP_400_BAD_REQUEST #!= status.HTTP_201_CREATED
+
+@given(u'no games exist')
+def step_impl(context):
+    assert len(get_games(context)) == 0
+
+@when(u'I create a new valid game')
+def step_impl(context):
+    context.created_game = create_game(context, create_valid_game_dict(4))
+
+@then(u'the game should have a position of 1')
+def step_impl(context):
+    assert context.created_game['position'] == 1
+
+@then(u'the first game in the list should have position 2')
+def step_impl(context):
+    assert get_games(context)[0]['position'] == 2

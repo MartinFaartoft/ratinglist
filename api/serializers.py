@@ -15,7 +15,7 @@ class GamePlayerSerializer(serializers.ModelSerializer):
         model = GamePlayer
         fields = ('score', 'order', 'player')
 
-class GameSerializer(serializers.ModelSerializer):
+class GameCreateSerializer(serializers.ModelSerializer):
     game_players = GamePlayerSerializer(many = True, required = True)
 
     def validate(self, data):
@@ -60,3 +60,17 @@ class GameSerializer(serializers.ModelSerializer):
         model = Game
         fields = ('id', 'game_type', 'date', 'number_of_winds', 'game_players')
 
+
+class GamePlayerViewSerializer(serializers.ModelSerializer):
+    player = PlayerSerializer(read_only = True)
+        
+    class Meta:
+        model = GamePlayer
+        fields = ('score', 'order', 'player')
+
+class GameViewSerializer(serializers.ModelSerializer):
+    game_players = GamePlayerViewSerializer(many = True)
+
+    class Meta:
+        model = Game
+        fields = ('id', 'game_type', 'date', 'number_of_winds', 'game_players', 'position')
