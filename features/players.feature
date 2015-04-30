@@ -31,7 +31,7 @@ Scenario: Deleting a player with no games played
 Scenario: Deleting a player with games played
     Given I am logged in as an admin
       And a player with id 1 exists
-     When I create a new game with 4 players
+     When I create a game with 4 players
       And I delete the player with id 1
      Then I should not be allowed to delete
       And a player with id 1 should exist

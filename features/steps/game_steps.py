@@ -9,28 +9,33 @@ def step_impl(context):
     games = get_games(context)
     context.game_count = len(games)
 
-@when(u'I create a new game with {number} players')
+@when(u'I create a game with {number} players')
 def step_impl(context, number):
     game = create_valid_game_dict(int(number))
     context.created_game = create_game(context, game)
 
-@when(u'I create a new game with {number} players with scores that do not sum to zero')
+@when(u'I create a game with {number} players with scores that do not sum to zero')
 def step_impl(context, number):
     game = create_valid_game_dict(int(number))
     game['game_players'][0]['score'] = 10
     create_game(context, game)    
 
-@when(u'I create a new game with {number} players where one player is duplicated')
+@when(u'I create a game with {number} players where one player is duplicated')
 def step_impl(context, number):
     game = create_valid_game_dict(int(number))
     game['game_players'][1]['player'] = 1
     create_game(context, game)
 
-@when(u'I create a new game with {number} players where one player does not exist')
+@when(u'I create a game with {number} players where one player does not exist')
 def step_impl(context, number):
     game = create_valid_game_dict(int(number))
     game['game_players'][1]['player'] = 1337
     create_game(context, game)
+
+@when(u'I create a {game_type} game that finished at {datetime}')
+def step_impl(context, game_type, datetime):
+    game = create_valid_game_dict(int(number))
+    context.created_game = create_game(context, game)
 
 @then(u'the number of games should increase by 1')
 def step_impl(context):

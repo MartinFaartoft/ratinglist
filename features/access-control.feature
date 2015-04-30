@@ -8,7 +8,7 @@ Scenario: Creating a player without being logged in
 
 Scenario: Creating a game without being logged in
     Given I am not logged in
-     When I create a new game with 4 players
+     When I create a game with 4 players
      Then I should be told that I am forbidden from doing that
 
 Scenario: Updating a player without being logged in
