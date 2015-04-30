@@ -36,6 +36,19 @@ Scenario: A player that does not exist is in the game
      When I create a game with 4 players where one player does not exist
      Then the game should not be created
 
+Scenario: Two games of the same type are finished at the same time
+    Given at least 4 players exist
+     When I create a game of type mcr that finished at 2015-01-01T00:00
+      And I create a game of type mcr that finished at 2015-01-01T00:00
+     Then the game should not be created
+
+Scenario: Two games of different types are finished at the same time
+    Given at least 4 players exist
+     When I create a game of type mcr that finished at 2015-01-01T00:00
+      And I create a game of type riichi that finished at 2015-01-01T00:00
+     Then the game should be created
+
+
 Scenario: The list of games should be sorted by finished_time
     
 Scenario: A riichi game has a score that is not evenly divisible by 100
@@ -45,3 +58,5 @@ Scenario: The order of the players in a game is wrong
 Scenario: The gametype is invalid
 
 Scenario: The number of winds is invalid
+
+Scenario: The game finished in the future

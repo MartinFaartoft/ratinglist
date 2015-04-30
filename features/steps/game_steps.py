@@ -32,9 +32,9 @@ def step_impl(context, number):
     game['game_players'][1]['player'] = 1337
     create_game(context, game)
 
-@when(u'I create a {game_type} game that finished at {datetime}')
+@when(u'I create a game of type {game_type} that finished at {datetime}')
 def step_impl(context, game_type, datetime):
-    game = create_valid_game_dict(int(number))
+    game = create_valid_game_dict(4, game_type, datetime)
     context.created_game = create_game(context, game)
 
 @then(u'the number of games should increase by 1')
@@ -48,8 +48,12 @@ def step_impl(context, number):
 
 @then(u'the game should not be created')
 def step_impl(context):
-    print(context.response.status_code)
     assert context.response.status_code == status.HTTP_400_BAD_REQUEST #!= status.HTTP_201_CREATED
+
+@then(u'the game should be created')
+def step_impl(context):
+    assert context.response.status_code == status.HTTP_201_CREATED
+
 
 @given(u'no games exist')
 def step_impl(context):
