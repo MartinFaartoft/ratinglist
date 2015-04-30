@@ -88,3 +88,11 @@ class GamesList(APIView):
             return Response(GameViewSerializer(game).data, status = status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+class RatingEntriesList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, pk):
+        rating_entries = RatingEntry.objects.filter(player_id = pk)
+        serializer = RatingEntrySerializer(rating_entries, many=True)
+        return Response(serializer.data)

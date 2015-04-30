@@ -31,3 +31,17 @@ class GamePlayer(models.Model):
     class Meta:
         unique_together = ('game', 'player')
         db_table = 'game_players'
+
+class RatingEntry(models.Model):
+    game = models.ForeignKey(Game)
+    player = models.ForeignKey(Player, related_name='rating_entries')
+    difficulty = models.FloatField()
+    expected_score = models.FloatField()
+    score = models.IntegerField()
+    score_sum = models.IntegerField()
+    rating_delta = models.FloatField()
+    rating = models.FloatField()
+
+    class Meta:
+        unique_together = ('game', 'player')
+        db_table = 'rating_entries'

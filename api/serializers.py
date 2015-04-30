@@ -2,6 +2,7 @@ from django.forms import widgets
 from rest_framework import serializers
 ValidationError = serializers.ValidationError
 from api.models import *
+from game_rater import *
 
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -54,6 +55,8 @@ class GameCreateSerializer(serializers.ModelSerializer):
         for row in game_players:
             game.game_players.add(GamePlayer(**row))
         
+        rate_game(game)
+
         return game
 
     class Meta:        
@@ -74,3 +77,9 @@ class GameViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
         fields = ('id', 'game_type', 'finished_time', 'number_of_winds', 'game_players')
+
+class RatingEntrySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RatingEntry
+        fields = ('difficulty', 'expected_score', 'score', 'score_sum', 'rating_delta', 'rating', 'game')
