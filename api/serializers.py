@@ -58,7 +58,7 @@ class GameCreateSerializer(serializers.ModelSerializer):
 
     class Meta:        
         model = Game
-        fields = ('id', 'game_type', 'date', 'number_of_winds', 'game_players')
+        fields = ('id', 'game_type', 'finished_time', 'number_of_winds', 'game_players')
 
 
 class GamePlayerViewSerializer(serializers.ModelSerializer):
@@ -73,4 +73,4 @@ class GameViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Game
-        fields = ('id', 'game_type', 'date', 'number_of_winds', 'game_players', 'position')
+        fields = ('id', 'game_type', 'finished_time', 'number_of_winds', 'game_players')

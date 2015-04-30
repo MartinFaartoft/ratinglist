@@ -56,7 +56,7 @@ def create_valid_game_dict(number_of_players):
     game = dict()
     game['game_type'] = 'mcr'
     game['number_of_winds'] = 4
-    game['date'] = '2015-04-22T00:00'
+    game['finished_time'] = '2015-04-22T00:00'
 
     game_players = []
     for i in range(n):

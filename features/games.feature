@@ -36,19 +36,8 @@ Scenario: A player that does not exist is in the game
      When I create a new game with 4 players where one player does not exist
      Then the game should not be created
 
-Scenario: A new game should have a position
-    Given at least 4 players exist
-      And no games exist
-     When I create a new valid game
-     Then the game should have a position of 1
-
-Scenario: The list of games should be sorted by position descending
-    Given at least 4 players exist
-      And no games exist
-     When I create a new valid game
-      And I create a new valid game
-     Then the first game in the list should have position 2
-
+Scenario: The list of games should be sorted by finished_time
+    
 Scenario: A riichi game has a score that is not evenly divisible by 100
 
 Scenario: The order of the players in a game is wrong

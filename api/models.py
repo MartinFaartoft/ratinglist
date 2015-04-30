@@ -14,26 +14,13 @@ class Player(models.Model):
 
 class Game(models.Model):
     game_type = models.CharField(max_length=50)
-    date = models.DateTimeField()
+    finished_time = models.DateTimeField()
     number_of_winds = models.IntegerField()
-    position = models.IntegerField()
 
     class Meta:
-        ordering = ('-position', )
-        unique_together = ('game_type', 'position')
+        ordering = ('-finished_time', )
+        unique_together = ('game_type', 'finished_time')
         db_table = 'games'
-
-    def save(self, *args, **kwargs):
-        #assume for now that games are always added to the end of the 'list'
-        cursor = connection.cursor()
-        cursor.execute('SELECT MAX(position) FROM games WHERE game_type = %s', [self.game_type])
-        position = cursor.fetchone()[0]
-        if position is not None:
-            self.position = int(position) + 1
-        else:
-            self.position = 1
-        print('POSITION', self.position)
-        super(Game, self).save()
 
 class GamePlayer(models.Model):
     game = models.ForeignKey(Game, related_name='game_players')
