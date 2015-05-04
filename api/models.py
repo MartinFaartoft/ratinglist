@@ -13,7 +13,8 @@ class Player(models.Model):
         db_table = 'players'
 
 class Game(models.Model):
-    game_type = models.CharField(max_length=50)
+    VALID_GAME_TYPES = (('mcr', 'mcr'), ('riichi', 'riichi'))
+    game_type = models.CharField(max_length=50, choices=VALID_GAME_TYPES)
     finished_time = models.DateTimeField()
     number_of_winds = models.IntegerField()
 

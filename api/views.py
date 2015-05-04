@@ -73,13 +73,12 @@ class LogoutView(APIView):
         response = Response(status=status.HTTP_200_OK)
         return response
 
-class GamesList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
-    def get(self, request):        
+class AllGamesList(APIView):
+    def get(self, request):
         games = Game.objects.all()
         serializer = GameViewSerializer(games, many=True)
         return Response(serializer.data)
+
 
     def post(self, request):
         serializer = GameCreateSerializer(data = request.data)
@@ -88,6 +87,14 @@ class GamesList(APIView):
             return Response(GameViewSerializer(game).data, status = status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+class GamesOfTypeList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
+    def get(self, request, game_type):
+        games = Game.objects.filter(game_type = game_type)
+        serializer = GameViewSerializer(games, many=True)
+        return Response(serializer.data)
 
 class RatingEntriesList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)

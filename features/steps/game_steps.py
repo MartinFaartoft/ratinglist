@@ -48,12 +48,11 @@ def step_impl(context, number):
 
 @then(u'the game should not be created')
 def step_impl(context):
-    assert context.response.status_code == status.HTTP_400_BAD_REQUEST #!= status.HTTP_201_CREATED
+    assert context.response.status_code == status.HTTP_400_BAD_REQUEST
 
 @then(u'the game should be created')
 def step_impl(context):
     assert context.response.status_code == status.HTTP_201_CREATED
-
 
 @given(u'no games exist')
 def step_impl(context):
@@ -62,3 +61,16 @@ def step_impl(context):
 @when(u'I create a new valid game')
 def step_impl(context):
     context.created_game = create_game(context, create_valid_game_dict(4))
+
+@when(u'I request the list of {game_type} games')
+def step_impl(context, game_type):
+    context.response = context.client.get(base_url + '/games/' + game_type + '/')
+
+@then(u'I should receive a list of {game_type} games')
+def step_impl(context, game_type):
+    assert context.response.status_code == status.HTTP_200_OK
+    assert context.response.json()[0]['game_type'] == game_type
+
+@then(u'I should not receive a list of games')
+def step_impl(context):
+    assert context.response.status_code == status.HTTP_404_NOT_FOUND

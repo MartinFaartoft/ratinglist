@@ -48,14 +48,32 @@ Scenario: Two games of different types are finished at the same time
       And I create a game of type riichi that finished at 2015-01-01T00:00
      Then the game should be created
 
+Scenario: The gametype is invalid
+    Given at least 4 players exist
+     When I create a game of type invalidgametype that finished at 2015-01-01T00:00
+     Then the game should not be created
+
+Scenario: Requesting a list of mcr games
+     When I create a game of type mcr that finished at 2015-01-01T00:00
+      And I create a game of type riichi that finished at 2015-01-01T00:00
+     When I request the list of mcr games
+     Then I should receive a list of mcr games
+
+Scenario: Requesting a list of riichi games
+     When I create a game of type mcr that finished at 2015-01-01T00:00
+      And I create a game of type riichi that finished at 2015-01-01T00:00
+     When I request the list of riichi games
+     Then I should receive a list of riichi games
+
+Scenario: Requesting a list of games of an invalid game type
+     When I request the list of invalidgametype games
+     Then I should not receive a list of games
 
 Scenario: The list of games should be sorted by finished_time
     
 Scenario: A riichi game has a score that is not evenly divisible by 100
 
 Scenario: The order of the players in a game is wrong
-
-Scenario: The gametype is invalid
 
 Scenario: The number of winds is invalid
 
