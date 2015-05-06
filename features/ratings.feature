@@ -9,3 +9,9 @@ Scenario: Creating a game with 4 players
       And I remember the number of rating entries for the player with id 1
      When I create a game with 4 players
      Then the number of rating entries for the player with id 1 should increase by 1
+
+Scenario: Viewing the ratinglist after creating a game
+    Given at least 4 players exist
+     When I create a game of type mcr that finished at 2015-01-01T00:00
+     Then the ratinglist for mcr should contain 4 players
+      And the ratinglist for riichi should contain 0 players

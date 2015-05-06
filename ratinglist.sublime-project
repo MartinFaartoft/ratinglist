@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/Users/mf/dropbox/code/ratinglist",
+            "folder_exclude_patterns": ["bin", "lib", "include"]
+		}
+	]
+}

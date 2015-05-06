@@ -71,3 +71,7 @@ def delete_player(context, id):
 def get_rating_entries(context, player_id):
     context.response = context.client.get(base_url + '/players/%s/rating/' % player_id)
     return context.response.json()
+
+def get_rating_list(context, game_type):
+    context.response = context.client.get(base_url + '/ratinglist/%s/' % game_type)
+    return context.response.json()

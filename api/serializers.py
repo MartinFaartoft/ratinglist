@@ -83,3 +83,9 @@ class RatingEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = RatingEntry
         fields = ('difficulty', 'expected_score', 'score', 'score_sum', 'rating_delta', 'rating', 'game')
+
+class RatingListSerializer(serializers.Serializer):
+    rating = serializers.FloatField()
+    name = serializers.CharField()
+    position = serializers.IntegerField()
+    player_id = serializers.IntegerField()

@@ -74,6 +74,8 @@ class LogoutView(APIView):
         return response
 
 class AllGamesList(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
     def get(self, request):
         games = Game.objects.all()
         serializer = GameViewSerializer(games, many=True)
@@ -102,4 +104,10 @@ class RatingEntriesList(APIView):
     def get(self, request, pk):
         rating_entries = RatingEntry.objects.filter(player_id = pk)
         serializer = RatingEntrySerializer(rating_entries, many=True)
+        return Response(serializer.data)
+
+class RatingList(APIView):
+    def get(self, request, game_type):
+        ratinglist = RatingRepository().get_rating_list(game_type)
+        serializer = RatingListSerializer(ratinglist, many=True)
         return Response(serializer.data)

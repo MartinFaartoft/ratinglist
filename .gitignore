@@ -62,3 +62,6 @@ target/
 # VirtualEnv
 bin/
 include/
+
+# Sublime user files
+*.sublime-workspace
