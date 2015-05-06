@@ -21,6 +21,23 @@ class GameCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         """Single field validation is done on Django model instances, this method takes care of multi-field validation"""
+        
+        if int(data['number_of_winds']) < 1:
+            raise ValidationError({
+                'number_of_winds': 'Invalid number of winds: %s, must be at least 1.' % data['number_of_winds'] 
+                })
+
+        if int(data['number_of_winds']) > 2 and data['game_type'] == RIICHI:
+            raise ValidationError({
+                'number_of_winds': 'Invalid number of winds: %s, must be at most 2 for riichi games.' % data['number_of_winds'] 
+                })
+
+        if int(data['number_of_winds']) > 4 and data['game_type'] == MCR:
+            raise ValidationError({
+                'number_of_winds': 'Invalid number of winds: %s, must be at most 2 for mcr games.' % data['number_of_winds'] 
+                })
+
+
         game_players = data['game_players']
 
         if len(game_players) < 4:

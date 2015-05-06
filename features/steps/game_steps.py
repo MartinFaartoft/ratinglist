@@ -66,6 +66,12 @@ def step_impl(context):
 def step_impl(context, game_type):
     context.response = context.client.get(base_url + '/games/' + game_type + '/')
 
+@when(u'I create a {game_type} game with {number_of_winds} winds')
+def step_impl(context, game_type, number_of_winds):
+    game = create_valid_game_dict(game_type = game_type)
+    game['number_of_winds'] = int(number_of_winds)
+    create_game(context, game)
+
 @then(u'I should receive a list of {game_type} games')
 def step_impl(context, game_type):
     assert context.response.status_code == status.HTTP_200_OK

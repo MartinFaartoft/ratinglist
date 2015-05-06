@@ -69,12 +69,26 @@ Scenario: Requesting a list of games of an invalid game type
      When I request the list of invalidgametype games
      Then I should not receive a list of games
 
+Scenario: The number of winds in a riichi game is greater than 2
+     When I create a riichi game with 3 winds
+     Then the game should not be created
+
+Scenario: The number of winds in a riichi game is less than 1
+    When I create a riichi game with 0 winds
+    Then the game should not be created
+
+Scenario: The number of winds in a mcr game is greater than 4
+     When I create a mcr game with 5 winds
+     Then the game should not be created
+
+Scenario: The number of winds in a mcr game is less than 1
+     When I create a mcr game with 0 winds
+     Then the game should not be created
+
+Scenario: The game finished in the future
+
 Scenario: The list of games should be sorted by finished_time
     
 Scenario: A riichi game has a score that is not evenly divisible by 100
 
 Scenario: The order of the players in a game is wrong
-
-Scenario: The number of winds is invalid
-
-Scenario: The game finished in the future

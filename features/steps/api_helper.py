@@ -55,7 +55,7 @@ def create_valid_game_dict(number_of_players = 4, game_type = 'mcr', finished_ti
 
     game = dict()
     game['game_type'] = game_type
-    game['number_of_winds'] = 4
+    game['number_of_winds'] = 1
     game['finished_time'] = finished_time
 
     game_players = []

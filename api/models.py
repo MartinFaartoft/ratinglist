@@ -1,6 +1,9 @@
 from django.db import models
 from django.db import connection
 
+RIICHI = 'riichi'
+MCR = 'mcr'
+
 class CaseInsensitiveCharField(models.CharField):
     def db_type(self, connection):
         return 'citext'
@@ -13,7 +16,7 @@ class Player(models.Model):
         db_table = 'players'
 
 class Game(models.Model):
-    VALID_GAME_TYPES = (('mcr', 'mcr'), ('riichi', 'riichi'))
+    VALID_GAME_TYPES = ((MCR, MCR), (RIICHI, RIICHI))
     game_type = models.CharField(max_length=50, choices=VALID_GAME_TYPES)
     finished_time = models.DateTimeField()
     number_of_winds = models.IntegerField()
