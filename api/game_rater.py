@@ -72,6 +72,6 @@ ORDER BY rating DESC;"""
         ratinglist = [RatingListEntry(name, player_id, rating, score_sum, i + 1) for i, (name, player_id, rating, score_sum) in enumerate(rows)]
         
         if as_dict:
-            ratinglist = dict([(r.id, (r.rating, r.score_sum)) for r in ratinglist])
+            ratinglist = dict([(r.player_id, (r.rating, r.score_sum)) for r in ratinglist])
 
         return ratinglist

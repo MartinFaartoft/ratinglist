@@ -28,9 +28,9 @@ def step_impl(context, game_type, player_id):
 def step_impl(context, player_id, position, game_type):
     assert get_rating_list(context, game_type)[int(position) - 1]['player_id'] == int(player_id)
 
-@when(u'I create a game of type mcr where the player with id {player_id} got {score} points')
-def step_impl(context, player_id, score):
-    game = create_valid_game_dict()
+@when(u'I create a {game_type} game that finished at {finished_time} where the player with id {player_id} got {score} points')
+def step_impl(context, game_type, finished_time, player_id, score):
+    game = create_valid_game_dict(game_type=game_type, finished_time=finished_time)
     game['number_of_winds'] = 4
     game['game_players'][int(player_id) - 1]['score'] = int(score)
     game['game_players'][int(player_id)]['score'] = -int(score)
@@ -45,3 +45,9 @@ def step_impl(context, player_id, rating):
 def step_impl(context, value):
     rating_list = get_rating_list(context, 'mcr')
     assert sum(map(lambda r: r['rating'], rating_list)) == float(value)
+
+@then(u'the player with id {player_id} should have a score sum of {score_sum} on the {game_type} ratinglist')
+def step_impl(context, player_id, score_sum, game_type):
+    rating_list = get_rating_list(context, game_type)
+    player_rating = filter(lambda pr: pr['player_id'] == int(player_id), rating_list)[0]
+    assert player_rating['score_sum'] == int(score_sum)

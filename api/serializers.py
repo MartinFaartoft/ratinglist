@@ -106,3 +106,4 @@ class RatingListSerializer(serializers.Serializer):
     name = serializers.CharField()
     position = serializers.IntegerField()
     player_id = serializers.IntegerField()
+    score_sum = serializers.IntegerField()
