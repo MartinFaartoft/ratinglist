@@ -15,3 +15,8 @@ Scenario: Viewing the ratinglist after creating a game
      When I create a game of type mcr that finished at 2015-01-01T00:00
      Then the ratinglist for mcr should contain 4 players
       And the ratinglist for riichi should contain 0 players
+
+Scenario: Winning the only game should put you at the top of the rating list
+    Given at least 4 players exist
+     When I create a game of type mcr where the player with id 3 won
+     Then the player with id 3 should be in position 1 on the mcr ratinglist
