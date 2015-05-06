@@ -20,3 +20,13 @@ Scenario: Winning the only game should put you at the top of the rating list
     Given at least 4 players exist
      When I create a game of type mcr where the player with id 3 won
      Then the player with id 3 should be in position 1 on the mcr ratinglist
+
+Scenario: Getting 41 points in the first game, should increase rating by 1
+    Given at least 4 players exist
+     When I create a game of type mcr where the player with id 3 got 41 points
+     Then the player with id 3 should be in position 1 on the mcr ratinglist
+      And the player with id 3 should have 1.0 in rating
+
+Scenario: A game is created and the ratings sum to zero
+    When I create a game of type mcr where the player with id 3 got 127 points
+    Then the ratings should sum to 0.0

@@ -10,37 +10,47 @@ def rate_game(game):
     #Add 0 rating entries for new players
     for gp in game_players:
         if not gp.player.id in current_rating:
-            current_rating[gp.player_id] = 0.0
+            current_rating[gp.player_id] = (0.0, 0)
 
-    difficulty = sum(map(lambda gp: current_rating[gp.player.id], game_players)) / len(game_players)
+    difficulty = sum(map(lambda gp: current_rating[gp.player.id][0], game_players)) / len(game_players)
 
-
+    game_length_factor = game.number_of_winds / (4.0 if game.game_type == MCR else 2.0)
+    damping_factor = 40.0 * game_length_factor + 1.0
+    #print('LENGTH', game_length_factor)
+    #print('DAMPING', damping_factor)
+    #print('DIFFICULTY', difficulty)
     for gp in game_players:
-        rating_entry = RatingEntry()
-        rating_entry.player = gp.player
-        rating_entry.game = game
+        old_rating = current_rating[gp.player.id][0]
+        old_score_sum = current_rating[gp.player.id][1]
+        r = RatingEntry()
+        r.player = gp.player
+        r.game = game
         
-        rating_entry.difficulty = difficulty
+        r.difficulty = difficulty
         
-        rating_entry.expected_score = current_rating[gp.player.id] - difficulty
-        rating_entry.score = gp.score
-        rating_entry.score_sum = gp.score #TODO FIX
-        rating_entry.rating_delta = rating_entry.score - rating_entry.expected_score
-        rating_entry.rating = current_rating[gp.player.id] + rating_entry.rating_delta
-        rating_entry.save()
+        r.expected_score = old_rating - difficulty
+        r.score = gp.score
+        r.score_sum = old_score_sum + gp.score
+        r.rating_delta = (gp.score * game_length_factor + difficulty - old_rating) / damping_factor
+        #print('NUMERATOR', (gp.score * game_length_factor + difficulty - old_rating))
+        #print('SCORE', gp.score)
+        #print('RATING_DELTA', r.rating_delta)
+        r.rating = old_rating + r.rating_delta
+        r.save()
 
 class RatingListEntry():
-    def __init__(self, name, player_id, rating, position):
+    def __init__(self, name, player_id, rating, score_sum, position):
         self.name = name
         self.player_id = player_id
         self.rating = rating
         self.position = position
+        self.score_sum = score_sum
 
 
 class RatingRepository():
     def get_rating_list(self, game_type, as_dict = False):
         sql = """
-SELECT p.name, p.id, r.rating FROM players p 
+SELECT p.name, p.id, r.rating, r.score_sum FROM players p 
 INNER JOIN rating_entries r 
 ON p.id = r.player_id 
 AND r.id = (
@@ -59,9 +69,9 @@ ORDER BY rating DESC;"""
         rows = cursor.fetchall()
         
 
-        ratinglist = [RatingListEntry(name, player_id, rating, i + 1) for i, (name, player_id, rating) in enumerate(rows)]
+        ratinglist = [RatingListEntry(name, player_id, rating, score_sum, i + 1) for i, (name, player_id, rating, score_sum) in enumerate(rows)]
         
         if as_dict:
-            ratinglist = dict([(r.id, r.rating) for r in ratinglist])
+            ratinglist = dict([(r.id, (r.rating, r.score_sum)) for r in ratinglist])
 
         return ratinglist

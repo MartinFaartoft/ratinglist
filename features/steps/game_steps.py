@@ -75,7 +75,8 @@ def step_impl(context, game_type, number_of_winds):
 @then(u'I should receive a list of {game_type} games')
 def step_impl(context, game_type):
     assert context.response.status_code == status.HTTP_200_OK
-    assert context.response.json()[0]['game_type'] == game_type
+    for game in context.response.json():
+        assert game['game_type'] == game_type
 
 @then(u'I should not receive a list of games')
 def step_impl(context):

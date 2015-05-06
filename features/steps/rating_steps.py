@@ -27,3 +27,21 @@ def step_impl(context, game_type, player_id):
 @then(u'the player with id {player_id} should be in position {position} on the {game_type} ratinglist')
 def step_impl(context, player_id, position, game_type):
     assert get_rating_list(context, game_type)[int(position) - 1]['player_id'] == int(player_id)
+
+@when(u'I create a game of type mcr where the player with id {player_id} got {score} points')
+def step_impl(context, player_id, score):
+    game = create_valid_game_dict()
+    game['number_of_winds'] = 4
+    game['game_players'][int(player_id) - 1]['score'] = int(score)
+    game['game_players'][int(player_id)]['score'] = -int(score)
+    create_game(context, game)
+    
+
+@then(u'the player with id {player_id} should have {rating} in rating')
+def step_impl(context, player_id, rating):
+    assert context.response.json()[0]['rating'] == float(rating)
+
+@then(u'the ratings should sum to {value}')
+def step_impl(context, value):
+    rating_list = get_rating_list(context, 'mcr')
+    assert sum(map(lambda r: r['rating'], rating_list)) == float(value)
