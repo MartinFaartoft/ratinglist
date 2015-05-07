@@ -101,8 +101,8 @@ class GamesOfTypeList(APIView):
 class RatingEntriesList(APIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
-    def get(self, request, pk):
-        rating_entries = RatingEntry.objects.filter(player_id = pk)
+    def get(self, request, pk, game_type):
+        rating_entries = RatingEntry.objects.filter(player_id = pk).filter(game__game_type = game_type)
         serializer = RatingEntrySerializer(rating_entries, many=True)
         return Response(serializer.data)
 

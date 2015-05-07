@@ -6,9 +6,9 @@ Background: Assume the user is an administrator, access control is tested elsewh
 
 Scenario: Creating a game with 4 players 
     Given at least 4 players exist
-      And I remember the number of rating entries for the player with id 1
+      And I remember the number of mcr rating entries for the player with id 1
      When I create a game with 4 players
-     Then the number of rating entries for the player with id 1 should increase by 1
+     Then the number of mcr rating entries for the player with id 1 should increase by 1
 
 Scenario: Viewing the ratinglist after creating a game
     Given at least 4 players exist
@@ -35,3 +35,9 @@ Scenario: The rating list score sum should be equal to the sum of scores reporte
     When I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 127 points 
      And I create a mcr game that finished at 2015-01-02T00:00 where the player with id 3 got 173 points
     Then the player with id 3 should have a score sum of 300 on the mcr ratinglist
+
+Scenario: An older game is added to the rating list, the rating for the newer games are recalculated
+    When I create a mcr game that finished at 2015-01-02T00:00 where the player with id 3 got 127 points
+     And I remember the newest mcr rating entry for player with id 3
+     And I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 127 points
+    Then the newest mcr rating entry for player with id 3 should have a different rating

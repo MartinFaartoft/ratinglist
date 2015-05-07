@@ -4,13 +4,13 @@ import json
 from rest_framework import status
 from api_helper import *
 
-@given(u'I remember the number of rating entries for the player with id {player_id}')
-def step_impl(context, player_id):
-    context.number_of_rating_entries = len(get_rating_entries(context, int(player_id)))
+@given(u'I remember the number of {game_type} rating entries for the player with id {player_id}')
+def step_impl(context, game_type, player_id):
+    context.number_of_rating_entries = len(get_rating_entries(context, int(player_id), game_type))
 
-@then(u'the number of rating entries for the player with id {player_id} should increase by 1')
-def step_impl(context, player_id):
-    assert context.number_of_rating_entries + 1 == len(get_rating_entries(context, int(player_id)))
+@then(u'the number of {game_type} rating entries for the player with id {player_id} should increase by {number}')
+def step_impl(context, game_type, player_id, number):
+    assert context.number_of_rating_entries + int(number) == len(get_rating_entries(context, int(player_id), game_type))
 
 @then(u'the ratinglist for {game_type} should contain {number} players')
 def step_impl(context, game_type, number):
@@ -51,3 +51,13 @@ def step_impl(context, player_id, score_sum, game_type):
     rating_list = get_rating_list(context, game_type)
     player_rating = filter(lambda pr: pr['player_id'] == int(player_id), rating_list)[0]
     assert player_rating['score_sum'] == int(score_sum)
+
+@when(u'I remember the newest {game_type} rating entry for player with id {player_id}')
+def step_impl(context, game_type, player_id):
+    rating_entries = get_rating_entries(context, player_id, game_type)
+    context.old_rating_entry = rating_entries[0]
+
+@then(u'the newest {game_type} rating entry for player with id {player_id} should have a different rating')
+def step_impl(context, game_type, player_id):
+    new_rating_entry = get_rating_entries(context, player_id, game_type)[0]
+    assert context.old_rating_entry['rating'] != new_rating_entry['rating']

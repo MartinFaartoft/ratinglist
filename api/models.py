@@ -20,6 +20,7 @@ class Game(models.Model):
     game_type = models.CharField(max_length=50, choices=VALID_GAME_TYPES)
     finished_time = models.DateTimeField()
     number_of_winds = models.IntegerField()
+    is_rated = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-finished_time', )
@@ -47,5 +48,6 @@ class RatingEntry(models.Model):
     rating = models.FloatField()
 
     class Meta:
+        ordering = ('-game__finished_time', )
         unique_together = ('game', 'player')
         db_table = 'rating_entries'

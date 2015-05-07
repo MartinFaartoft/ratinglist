@@ -72,7 +72,12 @@ class GameCreateSerializer(serializers.ModelSerializer):
         for row in game_players:
             game.game_players.add(GamePlayer(**row))
         
-        rate_game(game)
+        Game.objects.filter(finished_time__gt=game.finished_time).filter(game_type=game.game_type).update(is_rated=False)
+        RatingEntry.objects.filter(game__is_rated=False).delete()
+        
+        unrated_games = Game.objects.filter(is_rated=False).order_by('finished_time')
+        for unrated_game in unrated_games:
+            rate_game(unrated_game)
 
         return game
 
