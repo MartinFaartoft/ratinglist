@@ -25,7 +25,7 @@ Scenario: Getting 41 points in the first game, should increase rating by 1
     Given at least 4 players exist
      When I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 41 points
      Then the player with id 3 should be in position 1 on the mcr ratinglist
-      And the player with id 3 should have 1.0 in rating
+      And the player with id 3 should have 1.0 in mcr rating
 
 Scenario: A game is created and the ratings sum to zero
     When I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 127 points
@@ -41,3 +41,10 @@ Scenario: An older game is added to the rating list, the rating for the newer ga
      And I remember the newest mcr rating entry for player with id 3
      And I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 127 points
     Then the newest mcr rating entry for player with id 3 should have a different rating
+
+Scenario: Two games are created, and the oldest one is deleted - which causes the rating to be recalculated for all subsequent games
+    When I create a mcr game that finished at 2015-01-01T00:00 where the player with id 3 got 41 points
+     And I remember the id of the new game
+     And I create a mcr game that finished at 2015-01-02T00:00 where the player with id 3 got 41 points
+     And I delete the remembered game
+    Then the player with id 3 should have 1.0 in mcr rating

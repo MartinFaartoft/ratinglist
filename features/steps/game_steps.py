@@ -83,11 +83,11 @@ def step_impl(context):
     assert context.response.status_code == status.HTTP_404_NOT_FOUND
 
 
-@when(u'remember the id of the new game')
+@when(u'I remember the id of the new game')
 def step_impl(context):
     context.new_game_id = context.response.json()['id']
 
-@when(u'delete the new game')
+@when(u'I delete the remembered game')
 def step_impl(context):
     delete_game(context, context.new_game_id)
 

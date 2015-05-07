@@ -128,5 +128,8 @@ class GameDetail(APIView):
 
     def delete(self, request, pk):
         game = self.get_object(pk)
-        game.delete() #TODO RECALCULATE RATING
+        r = RatingRepository()
+        r.clear_rating_for_games_after(game)
+        game.delete()
+        r.rate_unrated_games()
         return Response(status=status.HTTP_204_NO_CONTENT)

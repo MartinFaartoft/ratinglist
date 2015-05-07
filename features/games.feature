@@ -87,8 +87,8 @@ Scenario: The number of winds in a mcr game is less than 1
 
 Scenario: Deleting a game
      When I create a game with 4 players
-      And remember the id of the new game
-      And delete the new game
+      And I remember the id of the new game
+      And I delete the remembered game
      Then the game should be deleted
 
 

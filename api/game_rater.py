@@ -75,3 +75,15 @@ ORDER BY rating DESC;"""
             ratinglist = dict([(r.player_id, (r.rating, r.score_sum)) for r in ratinglist])
 
         return ratinglist
+
+    def clear_rating_for_games_after(self, game):
+        Game.objects.filter(finished_time__gt=game.finished_time).filter(game_type=game.game_type).update(is_rated=False)
+        RatingEntry.objects.filter(game__is_rated=False).delete()
+        
+    def rate_unrated_games(self):
+        unrated_games = Game.objects.filter(is_rated=False).order_by('finished_time')
+        for unrated_game in unrated_games:
+            rate_game(unrated_game)
+
+        unrated_games.update(is_rated=True)
+        #TODO bulk update

@@ -37,9 +37,10 @@ def step_impl(context, game_type, finished_time, player_id, score):
     create_game(context, game)
     
 
-@then(u'the player with id {player_id} should have {rating} in rating')
-def step_impl(context, player_id, rating):
-    assert context.response.json()[0]['rating'] == float(rating)
+@then(u'the player with id {player_id} should have {rating} in {game_type} rating')
+def step_impl(context, player_id, rating, game_type):
+    rating_entries = get_rating_entries(context, int(player_id), game_type)
+    assert rating_entries[0]['rating'] == float(rating)
 
 @then(u'the ratings should sum to {value}')
 def step_impl(context, value):
