@@ -111,3 +111,22 @@ class RatingList(APIView):
         ratinglist = RatingRepository().get_rating_list(game_type)
         serializer = RatingListSerializer(ratinglist, many=True)
         return Response(serializer.data)
+
+class GameDetail(APIView):
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_object(self, pk):
+        try:
+            return Game.objects.get(pk=pk)
+        except Game.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        game = self.get_object(pk)
+        serializer = GameViewSerializer(game)
+        return Response(serializer.data)
+
+    def delete(self, request, pk):
+        game = self.get_object(pk)
+        game.delete() #TODO RECALCULATE RATING
+        return Response(status=status.HTTP_204_NO_CONTENT)

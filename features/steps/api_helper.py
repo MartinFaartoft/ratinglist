@@ -50,6 +50,9 @@ def create_game(context, game):
     except:
         return
 
+def delete_game(context, new_game_id):
+    context.response = context.client.delete(base_url + '/games/%s/' % new_game_id)
+
 def create_valid_game_dict(number_of_players = 4, game_type = 'mcr', finished_time = '2015-04-22T00:00'):
     n = number_of_players
 

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^players/(?P<pk>[0-9]+)/rating/(?P<game_type>mcr|riichi)/$', views.RatingEntriesList.as_view()),
     url(r'^games/(?P<game_type>mcr|riichi)/$', views.GamesOfTypeList.as_view()),
     url(r'^games/$', views.AllGamesList.as_view()),
+    url(r'^games/(?P<pk>[0-9]+)/$', views.GameDetail.as_view()),
     url(r'^ratinglist/(?P<game_type>mcr|riichi)/$', views.RatingList.as_view()),
 
     #User defined auth

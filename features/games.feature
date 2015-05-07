@@ -85,6 +85,13 @@ Scenario: The number of winds in a mcr game is less than 1
      When I create a mcr game with 0 winds
      Then the game should not be created
 
+Scenario: Deleting a game
+     When I create a game with 4 players
+      And remember the id of the new game
+      And delete the new game
+     Then the game should be deleted
+
+
 Scenario: The game finished in the future
 
 Scenario: The list of games should be sorted by finished_time

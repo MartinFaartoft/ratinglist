@@ -81,3 +81,17 @@ def step_impl(context, game_type):
 @then(u'I should not receive a list of games')
 def step_impl(context):
     assert context.response.status_code == status.HTTP_404_NOT_FOUND
+
+
+@when(u'remember the id of the new game')
+def step_impl(context):
+    context.new_game_id = context.response.json()['id']
+
+@when(u'delete the new game')
+def step_impl(context):
+    delete_game(context, context.new_game_id)
+
+@then(u'the game should be deleted')
+def step_impl(context):
+    assert context.response.status_code == status.HTTP_204_NO_CONTENT
+    assert context.client.get(base_url + '/games/%s/' % context.new_game_id).status_code == status.HTTP_404_NOT_FOUND
