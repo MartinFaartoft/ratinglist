@@ -79,6 +79,7 @@ class GameCreateSerializer(serializers.ModelSerializer):
         for unrated_game in unrated_games:
             rate_game(unrated_game)
 
+        unrated_games.update(is_rated=True)
         return game
 
     class Meta:        
