@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib import admin
 from api import views
 
@@ -14,6 +15,6 @@ urlpatterns = patterns('',
     url(r'^ratinglist/(?P<game_type>mcr|riichi)/$', views.RatingList.as_view()),
 
     #User defined auth
-    url(r'^auth/login$', views.LoginView.as_view()),
-    url(r'^auth/logout$', views.LogoutView.as_view()),
+    url(r'^auth/login$', csrf_exempt(views.LoginView.as_view())),
+    url(r'^auth/logout$', csrf_exempt(views.LogoutView.as_view())),
 )

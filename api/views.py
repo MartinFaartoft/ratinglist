@@ -2,6 +2,7 @@ from api.models import *
 from api.serializers import *
 from django.http import Http404
 from django.contrib.auth import authenticate, login, logout
+from django.middleware import csrf
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -59,10 +60,18 @@ class LoginView(APIView):
     def post(self, request):
         username = request.DATA['username']
         password = request.DATA['password']
+
+        print(username, password)
         user = authenticate(username=username, password=password)
+
         if user is not None:
-            return Response(status = status.HTTP_302_FOUND)
+            if user.is_active:
+                login(request, user)
+                return Response(status = status.HTTP_302_FOUND)
+            else:
+                return Response("Disabled account", status=401)
         else:
+            print(user)
             return Response("Invalid login", status = 401)
 
 class LogoutView(APIView):

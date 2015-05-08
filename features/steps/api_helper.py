@@ -5,13 +5,26 @@ from rest_framework import status
 base_url = 'http://localhost:8000'
 
 def login(context, username, password):
-    context.client.auth = (username, password)
-    #url = base_url + '/auth/login'
-    #login_data = dict(username=username, password=password)
-    #context.response = context.client.post(url, data=login_data)
-    #assert context.response.status_code == status.HTTP_302_FOUND
-    #if context.response.status_code == 200:
-        #context.client.headers['X-CSRFToken'] = context.client.cookies['csrftoken']
+    url = base_url + '/auth/login'
+    login_data = dict(username=username, password=password)
+    context.response = context.client.post(url, data=login_data)
+    #assert response.status_code == status.HTTP_302_FOUND
+    #print(response.status_code)
+    #print(response.headers)
+    #for c in response.cookies:
+    #    print(c)
+    if context.response.status_code == status.HTTP_302_FOUND:
+        context.client.headers['X-CSRFToken'] = context.client.cookies['csrftoken']
+
+
+# def login(context, username, password):
+#     context.client.auth = (username, password)
+#     #url = base_url + '/auth/login'
+#     #login_data = dict(username=username, password=password)
+#     #context.response = context.client.post(url, data=login_data)
+#     #assert context.response.status_code == status.HTTP_302_FOUND
+#     #if context.response.status_code == 200:
+#         #context.client.headers['X-CSRFToken'] = context.client.cookies['csrftoken']
 
 def logout(context):
     url = base_url + '/auth/logout'
