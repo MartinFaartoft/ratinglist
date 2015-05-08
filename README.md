@@ -35,6 +35,11 @@ CREATE EXTENSION citext;
 \q
 ```
 
+Herokup backups:
+https://devcenter.heroku.com/articles/heroku-postgres-backups
+```
+heroku pg:backups capture --app ratinglist && heroku pg:backups public-url --app ratinglist | xargs wget -O 'test-backup'
+```
 ## Local Debugging
 
 For local debugging, postgres must be running: `postgres -D /usr/local/var/postgres/`
