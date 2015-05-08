@@ -18,6 +18,11 @@ def step_impl(context):
     print(context.response.status_code)
     assert context.response.status_code == status.HTTP_403_FORBIDDEN
 
+@then(u'I should be told that I am not authorized to do that')
+def step_impl(context):
+    print(context.response.status_code)
+    assert context.response.status_code == status.HTTP_401_UNAUTHORIZED
+
 @then(u'I should not be allowed to delete')
 def step_impl(context):
     assert context.response.status_code == status.HTTP_409_CONFLICT

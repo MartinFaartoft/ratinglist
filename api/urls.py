@@ -15,6 +15,8 @@ urlpatterns = patterns('',
     url(r'^ratinglist/(?P<game_type>mcr|riichi)/$', views.RatingList.as_view()),
 
     #User defined auth
-    url(r'^auth/login$', csrf_exempt(views.LoginView.as_view())),
-    url(r'^auth/logout$', csrf_exempt(views.LogoutView.as_view())),
+    #url(r'^auth/login$', csrf_exempt(views.LoginView.as_view())),
+    #url(r'^auth/logout$', csrf_exempt(views.LogoutView.as_view())),
+
+    url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
 )

@@ -9,7 +9,6 @@ from rest_framework import permissions
 from rest_framework import status
 
 class PlayerList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get(self, request):
         players = Player.objects.all()
         serializer = PlayerSerializer(players, many=True)
@@ -24,7 +23,6 @@ class PlayerList(APIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class PlayerDetail(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     def get_object(self, pk):
         try:
             return Player.objects.get(pk=pk)
@@ -54,36 +52,8 @@ class PlayerDetail(APIView):
         player.delete()
         return Response(status = status.HTTP_204_NO_CONTENT)
 
-class LoginView(APIView):
-    permission_classes = (permissions.AllowAny,)
-
-    def post(self, request):
-        username = request.DATA['username']
-        password = request.DATA['password']
-
-        print(username, password)
-        user = authenticate(username=username, password=password)
-
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return Response(status = status.HTTP_200_OK)
-            else:
-                return Response("Disabled account", status=401)
-        else:
-            return Response("Invalid login", status = 401)
-
-class LogoutView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
-
-    def post(self, request):
-        logout(request)
-        response = Response(status=status.HTTP_200_OK)
-        return response
 
 class AllGamesList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
     def get(self, request):
         games = Game.objects.all()
         serializer = GameViewSerializer(games, many=True)
@@ -99,16 +69,12 @@ class AllGamesList(APIView):
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 class GamesOfTypeList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    
     def get(self, request, game_type):
         games = Game.objects.filter(game_type = game_type)
         serializer = GameViewSerializer(games, many=True)
         return Response(serializer.data)
 
 class RatingEntriesList(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
     def get(self, request, pk, game_type):
         rating_entries = RatingEntry.objects.filter(player_id = pk).filter(game__game_type = game_type)
         serializer = RatingEntrySerializer(rating_entries, many=True)
@@ -121,8 +87,6 @@ class RatingList(APIView):
         return Response(serializer.data)
 
 class GameDetail(APIView):
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
     def get_object(self, pk):
         try:
             return Game.objects.get(pk=pk)

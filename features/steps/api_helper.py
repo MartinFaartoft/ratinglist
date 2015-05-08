@@ -5,16 +5,17 @@ from rest_framework import status
 base_url = 'http://localhost:8000'
 
 def login(context, username, password):
-    url = base_url + '/auth/login'
+    url = base_url + '/api-token-auth/'
     login_data = dict(username=username, password=password)
     context.response = context.client.post(url, data=login_data)
     if context.response.status_code == status.HTTP_200_OK:
-        context.client.headers['X-CSRFToken'] = context.client.cookies['csrftoken']
+        context.client.headers['Authorization'] = 'JWT ' + context.response.json()['token']
+        print(context.client.headers)
 
 def logout(context):
-    url = base_url + '/auth/logout'
-    context.response = context.client.post(url)
-
+    if 'Authorization' in context.client.headers:
+        del context.client.headers['Authorization']
+    
 def get_players(context):
     context.response = context.client.get(base_url + '/players/')
     return context.response.json()
