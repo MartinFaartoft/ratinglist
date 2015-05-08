@@ -15,3 +15,8 @@ Scenario: Updating a player without being logged in
     Given I am not logged in
      When I update the player with id 1 to have the name NewName
      Then I should be told that I am not authorized to do that
+
+Scenario: Getting the mcr ratinglist without being logged in
+    Given I am not logged in
+     When I request the mcr ratinglist
+     Then I should be allowed to receive it
