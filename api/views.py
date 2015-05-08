@@ -67,11 +67,10 @@ class LoginView(APIView):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return Response(status = status.HTTP_302_FOUND)
+                return Response(status = status.HTTP_200_OK)
             else:
                 return Response("Disabled account", status=401)
         else:
-            print(user)
             return Response("Invalid login", status = 401)
 
 class LogoutView(APIView):
