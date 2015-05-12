@@ -67,8 +67,9 @@ def create_valid_game_dict(number_of_players = 4, game_type = 'mcr', finished_ti
 
     return game
 
-def delete_player(context, id):
-    context.response = context.client.delete(base_url + '/players/' + id)
+def delete_player(context, player_id):
+    context.response = context.client.delete(base_url + '/players/%s/' % player_id)
+    print(context.response)
 
 def get_rating_entries(context, player_id, game_type):
     context.response = context.client.get(base_url + '/players/%s/rating/%s/' % (player_id, game_type))

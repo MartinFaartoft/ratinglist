@@ -46,7 +46,7 @@ class PlayerDetail(APIView):
     def delete(self, request, pk):
         game_players = GamePlayer.objects.filter(player_id=pk)
         if len(game_players) > 0:
-            return Response(status = status.HTTP_409_CONFLICT)
+            return Response(dict(detail='Cannot delete, player has played one or more games.'), status = status.HTTP_409_CONFLICT)
 
         player = self.get_object(pk)
         player.delete()
