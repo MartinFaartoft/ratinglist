@@ -62,6 +62,21 @@ class GameCreateSerializer(serializers.ModelSerializer):
                 'game_players.player': 'Duplicate players are not allowed'
                 })
 
+        if data['game_type'] == RIICHI:
+            invalid_riichi_score = False
+            for gp in game_players:
+                if int(gp['score']) % 100 != 0:
+                    invalid_riichi_score = True
+                    break
+
+            if invalid_riichi_score:
+                raise ValidationError({
+                    'game_players.score': 'One or more scores are not divisible by 100'
+                })
+
+
+
+
         return data
 
     def create(self, validated_data):

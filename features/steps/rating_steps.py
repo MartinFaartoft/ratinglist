@@ -36,6 +36,14 @@ def step_impl(context, game_type, finished_time, player_id, score):
     game['game_players'][int(player_id)]['score'] = -int(score)
     create_game(context, game)
     
+@when(u'I create a {game_type} game with {number_of_winds} winds that finished at {finished_time} where the player with id {player_id} got {score} points')
+def step_impl(context, game_type, number_of_winds, finished_time, player_id, score):
+    game = create_valid_game_dict(game_type=game_type, finished_time=finished_time)
+    game['number_of_winds'] = number_of_winds
+    game['game_players'][int(player_id) - 1]['score'] = int(score)
+    game['game_players'][int(player_id)]['score'] = -int(score)
+    create_game(context, game)
+
 
 @then(u'the player with id {player_id} should have {rating} in {game_type} rating')
 def step_impl(context, player_id, rating, game_type):

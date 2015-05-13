@@ -10,7 +10,6 @@ def login(context, username, password):
     context.response = context.client.post(url, data=login_data)
     if context.response.status_code == status.HTTP_200_OK:
         context.client.headers['Authorization'] = 'JWT ' + context.response.json()['token']
-        print(context.client.headers)
 
 def logout(context):
     if 'Authorization' in context.client.headers:
@@ -41,7 +40,6 @@ def get_games(context):
 def create_game(context, game):
     headers = {'Content-type': 'application/json'}
     game_json = json.dumps(game)
-    #print(game_json)
     context.response = context.client.post(base_url + '/games/', data = game_json, headers=headers)
 
     try:
