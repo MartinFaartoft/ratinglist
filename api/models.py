@@ -10,6 +10,8 @@ class CaseInsensitiveCharField(models.CharField):
 
 class Player(models.Model):
     name = CaseInsensitiveCharField(max_length=100, unique=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ('name', )
@@ -21,6 +23,8 @@ class Game(models.Model):
     finished_time = models.DateTimeField()
     number_of_winds = models.IntegerField()
     is_rated = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ('-finished_time', )
