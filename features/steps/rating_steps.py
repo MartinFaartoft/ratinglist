@@ -49,7 +49,15 @@ def step_impl(context, game_type, number_of_winds, finished_time, player_id, sco
 @then(u'the player with id {player_id} should have {rating} in {game_type} rating')
 def step_impl(context, player_id, rating, game_type):
     rating_entries = get_rating_entries(context, int(player_id), game_type)
-    assert rating_entries[0]['rating'] == float(rating)
+    print(rating_entries)
+    print(rating)
+    assert abs(rating_entries[0]['rating'] - float(rating)) <= 0.001
+
+@then(u'the player with id {player_id} should not have any {game_type} rating')
+def step_impl(context, player_id, game_type):
+    rating_entries = get_rating_entries(context, int(player_id), game_type)
+    assert len(rating_entries) == 0
+
 
 @then(u'the ratings should sum to {value}')
 def step_impl(context, value):

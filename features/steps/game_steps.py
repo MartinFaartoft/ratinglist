@@ -46,6 +46,7 @@ def step_impl(context, number):
     n = int(number)
     assert n == len(context.created_game['game_players'])
 
+@then(u'the game should not be updated')
 @then(u'the game should not be created')
 def step_impl(context):
     assert context.response.status_code == status.HTTP_400_BAD_REQUEST
@@ -96,10 +97,12 @@ def step_impl(context):
     assert context.response.status_code == status.HTTP_204_NO_CONTENT
     assert context.client.get(base_url + '/games/%s/' % context.new_game_id).status_code == status.HTTP_404_NOT_FOUND
 
-@when(u'I update the remembered game by changing the gametype to {game_type}')
-def step_impl(context, game_type):
+@when(u'I update the remembered game by changing the gametype to {game_type} and the number of winds to {number}')
+def step_impl(context, game_type, number):
     game = flatten_game(context.game)
     game['game_type'] = game_type
+    if number:
+        game['number_of_winds'] = number
     update_game(context, game)
 
 @then(u'the remembered game should have gametype {game_type}')
@@ -115,3 +118,16 @@ def step_impl(context, player_id, score):
 @then(u'the remembered game should have {number} players')
 def step_impl(context, number):
     assert len(get_game(context, context.new_game_id)['game_players']) == int(number)
+
+@when(u'I update the remembered game by changing the {field} to {value}')
+def step_impl(context, field, value):
+    game = flatten_game(context.game)
+    game[field] = value
+    update_game(context, game)
+
+@then(u'the remembered game should have {field} equal to {value}')
+def step_impl(context, field, value):
+    game = get_game(context, context.new_game_id)
+    print(game[field])
+    print(value)
+    assert game[field] == value
