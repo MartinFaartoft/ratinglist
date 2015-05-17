@@ -35,6 +35,11 @@ CREATE EXTENSION citext;
 \q
 ```
 
+Set the timezome:
+```
+heroku config:add TZ="Europe/Copenhagen"
+```
+
 Herokup backups:
 https://devcenter.heroku.com/articles/heroku-postgres-backups
 ```

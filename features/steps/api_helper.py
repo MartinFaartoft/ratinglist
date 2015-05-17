@@ -33,9 +33,17 @@ def update_player(context, player_id, name):
     url = base_url + '/players/' + player_id
     context.response = context.client.put(url, data = dict(name = name))
 
+def get_game(context, game_id):
+    context.response = context.client.get(base_url + '/games/%s/' % game_id)
+    return context.response.json()
+
 def get_games(context):
     context.response = context.client.get(base_url + '/games/')
     return context.response.json()
+
+def update_game(context, game):
+    headers = {'Content-type': 'application/json'}
+    context.response = context.client.put(base_url + '/games/%s/' % game['id'], data = json.dumps(game), headers=headers)
 
 def create_game(context, game):
     headers = {'Content-type': 'application/json'}
@@ -46,6 +54,12 @@ def create_game(context, game):
         return context.response.json()
     except:
         return
+
+def flatten_game(game):
+    for gp in game['game_players']:
+        gp['player'] = gp['player']['id']
+
+    return game
 
 def delete_game(context, new_game_id):
     context.response = context.client.delete(base_url + '/games/%s/' % new_game_id)

@@ -82,7 +82,7 @@ def step_impl(context, game_type):
 def step_impl(context):
     assert context.response.status_code == status.HTTP_404_NOT_FOUND
 
-
+@given(u'I remember the id of the new game')
 @when(u'I remember the id of the new game')
 def step_impl(context):
     context.new_game_id = context.response.json()['id']
@@ -95,3 +95,23 @@ def step_impl(context):
 def step_impl(context):
     assert context.response.status_code == status.HTTP_204_NO_CONTENT
     assert context.client.get(base_url + '/games/%s/' % context.new_game_id).status_code == status.HTTP_404_NOT_FOUND
+
+@when(u'I update the remembered game by changing the gametype to {game_type}')
+def step_impl(context, game_type):
+    game = flatten_game(context.game)
+    game['game_type'] = game_type
+    update_game(context, game)
+
+@then(u'the remembered game should have gametype {game_type}')
+def step_impl(context, game_type):
+    assert get_game(context, context.new_game_id)['game_type'] == game_type
+
+@when(u'I update the remembered game by adding player {player_id} with {score} points')
+def step_impl(context, player_id, score):
+    game = flatten_game(context.game)
+    game['game_players'].append(dict(player = player_id, score = score, order = len(game['game_players']) + 1))
+    update_game(context, game)
+
+@then(u'the remembered game should have {number} players')
+def step_impl(context, number):
+    assert len(get_game(context, context.new_game_id)['game_players']) == int(number)

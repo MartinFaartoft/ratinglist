@@ -95,7 +95,6 @@ Scenario: A riichi game has valid scores
      When I create a riichi game with 2 winds that finished at 2015-01-01T00:00 where the player with id 3 got 12000 points
      Then the game should be created
 
-
 Scenario: A riichi game has a score that is not evenly divisible by 100
      When I create a riichi game with 2 winds that finished at 2015-01-01T00:00 where the player with id 3 got 127 points
      Then the game should not be created

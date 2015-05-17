@@ -74,9 +74,6 @@ class GameCreateSerializer(serializers.ModelSerializer):
                     'game_players.score': 'One or more scores are not divisible by 100'
                 })
 
-
-
-
         return data
 
     def create(self, validated_data):
@@ -93,6 +90,28 @@ class GameCreateSerializer(serializers.ModelSerializer):
         r.rate_unrated_games()
         
         return game
+
+    def update(self, instance, validated_data):
+        game_players = validated_data.pop('game_players')
+        instance.game_players.all().delete()
+        
+        for row in game_players:
+            instance.game_players.add(GamePlayer(**row))
+        
+        r = RatingRepository()
+        r.clear_rating_for_games_after(instance)
+
+        instance.game_type = validated_data.get('game_type', instance.game_type)
+        instance.finished_time = validated_data.get('finished_time', instance.finished_time)
+        instance.number_of_winds = validated_data.get('number_of_winds', instance.number_of_winds)
+        instance.is_rated = False
+        instance.save()
+
+        r.clear_rating_for_games_after(instance)
+        
+        r.rate_unrated_games()
+
+        return instance
 
     class Meta:        
         model = Game

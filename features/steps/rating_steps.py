@@ -21,7 +21,7 @@ def step_impl(context, game_type, player_id):
     game = create_valid_game_dict(number_of_players = 4, game_type = game_type)
     game['game_players'][2]['score'] = 40
     game['game_players'][3]['score'] = -40
-    create_game(context, game)
+    context.game = create_game(context, game)
 
 
 @then(u'the player with id {player_id} should be in position {position} on the {game_type} ratinglist')
@@ -34,15 +34,16 @@ def step_impl(context, game_type, finished_time, player_id, score):
     game['number_of_winds'] = 4
     game['game_players'][int(player_id) - 1]['score'] = int(score)
     game['game_players'][int(player_id)]['score'] = -int(score)
-    create_game(context, game)
-    
+    context.game = create_game(context, game)
+
+@given(u'I create a {game_type} game with {number_of_winds} winds that finished at {finished_time} where the player with id {player_id} got {score} points')    
 @when(u'I create a {game_type} game with {number_of_winds} winds that finished at {finished_time} where the player with id {player_id} got {score} points')
 def step_impl(context, game_type, number_of_winds, finished_time, player_id, score):
     game = create_valid_game_dict(game_type=game_type, finished_time=finished_time)
     game['number_of_winds'] = number_of_winds
     game['game_players'][int(player_id) - 1]['score'] = int(score)
     game['game_players'][int(player_id)]['score'] = -int(score)
-    create_game(context, game)
+    context.game = create_game(context, game)
 
 
 @then(u'the player with id {player_id} should have {rating} in {game_type} rating')
