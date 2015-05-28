@@ -132,11 +132,16 @@ class GameViewSerializer(serializers.ModelSerializer):
         model = Game
         fields = ('id', 'game_type', 'finished_time', 'number_of_winds', 'game_players')
 
-class RatingEntrySerializer(serializers.ModelSerializer):
+class RatingEntryGameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Game
+        fields = ('id', 'finished_time')
 
+class RatingEntrySerializer(serializers.ModelSerializer):
+    finished_time = serializers.DateTimeField(source='game.finished_time')
     class Meta:
         model = RatingEntry
-        fields = ('difficulty', 'expected_score', 'score', 'score_sum', 'rating_delta', 'rating', 'game')
+        fields = ('difficulty', 'expected_score', 'score', 'score_sum', 'rating_delta', 'rating', 'game', 'finished_time')
 
 class RatingListSerializer(serializers.Serializer):
     rating = serializers.FloatField()

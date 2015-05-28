@@ -82,6 +82,8 @@ class GamesOfTypeList(APIView):
 class RatingEntriesList(APIView):
     def get(self, request, pk, game_type):
         rating_entries = RatingEntry.objects.filter(player_id = pk).filter(game__game_type = game_type)
+        for r in rating_entries:
+            print(r.game)
         serializer = RatingEntrySerializer(rating_entries, many=True)
         return Response(serializer.data)
 
